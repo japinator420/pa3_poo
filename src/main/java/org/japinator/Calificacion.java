@@ -1,5 +1,6 @@
 package org.japinator;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Calificacion {
     private double promedio;
@@ -42,6 +43,9 @@ public class Calificacion {
         promedio = suma / notasEstudiante.size();
         return promedio;
     }
-
+    //ordenar las notas de menor a mayor
+    public void ordenarNotas(){
+        Collections.sort(notasEstudiante);
+    }
 
 }
