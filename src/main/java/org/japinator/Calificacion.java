@@ -30,5 +30,18 @@ public class Calificacion {
         return formatoNotas;
     }
 
+    public double calcularPromedio(){
+        if (notasEstudiante.isEmpty()){
+            return 0;
+        }
+        double suma = 0;
+
+        for (double nota:notasEstudiante){
+            suma+=nota;
+        }
+        promedio = suma / notasEstudiante.size();
+        return promedio;
+    }
+
 
 }
