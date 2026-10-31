@@ -43,6 +43,14 @@ public class Calificacion {
         promedio = suma / notasEstudiante.size();
         return promedio;
     }
+    //recuperar nota segun su posicion
+    public double obtenerNota(int indice){
+        if (indice>= 0 && indice<notasEstudiante.size()){
+            return notasEstudiante.get(indice);
+        }
+        return -1;
+    }
+
     //ordenar las notas de menor a mayor
     public void ordenarNotas(){
         Collections.sort(notasEstudiante);
