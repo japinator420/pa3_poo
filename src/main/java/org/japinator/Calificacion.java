@@ -86,7 +86,7 @@ public class Calificacion {
     public static void listarAprobados(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos) {
         System.out.println("\n  lista de aprobados (Exclusivo para alumnos con exactamente 3 notas).");
 
-
+        // Validación: Verificar si la colección está vacía o es nula
         if (registroNotas == null || registroNotas.isEmpty()) {
             System.out.println("Aún no hay registros de notas guardados en el sistema");
             return;
@@ -95,12 +95,13 @@ public class Calificacion {
         ArrayList<Calificacion> listaAprobados = new ArrayList<>();
 
         for (Calificacion c : registroNotas) {
-
+            //Restriccion: Solo evaluamos a los alumnos que tengan exactamente 3 notas registradas
             if (c.getNotasEstudiante().size() == 3) {
                 double promedio = c.calcularPromedio();
 
-
+                // Validación de rango lógico (sistema de 0 a 20)
                 if (promedio >= 0 && promedio <= 20) {
+                    // Filtro de aprobación: Nota mínima de 10.5
                     if (promedio >= 10.5) {
                         listaAprobados.add(c);
                     }
@@ -109,26 +110,27 @@ public class Calificacion {
                 }
             }
         }
-
+        // Validación: Si nadie pasó el filtro, se notifica y se detiene la ejecución
         if (listaAprobados.isEmpty()) {
             System.out.println("Ningún alumno con exactamente 3 notas alcanzó la nota aprobatoria en esta tanda.");
             return;
         }
 
-
+        // Ordenamos de mayor a menor promedio
         Collections.sort(listaAprobados, (c1, c2) -> Double.compare(c2.calcularPromedio(), c1.calcularPromedio()));
-
+        //Presentación de resultados en consola
         System.out.println("--- LISTA OFICIAL DE APROBADOS (3 NOTAS - Ordenados por mérito) ---");
         int puesto = 1;
         for (Calificacion c : listaAprobados) {
+            // Buscamos el nombre real del alumno utilizando el SortedSet y su código
             Alumno a = Alumno.buscarAlumno(listaAlumnos, c.getCodigoAlumno());
             String nombre = (a != null) ? a.getNombre() : "Alumno Desconocido";
-
+            // Imprimimos el puesto, nombre, código y su promedio formateado a dos decimales
             System.out.printf(" %d. %s (Cód: %s) -> Promedio: %.2f (¡Aprobado!)\n", puesto, nombre, c.getCodigoAlumno(), c.calcularPromedio());
             puesto++;
         }
 
-
+        //Resumen final del reporte
         System.out.println("Total de alumnos aprobados con 3 notas: " + listaAprobados.size());
     }
 
