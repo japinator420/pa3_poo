@@ -193,10 +193,10 @@ public class Main {
                     break;
                 }
                 case 7 ->{
-
+                    Calificacion.listarAprobados(registroNotas,listaAlumnos);
                 }
                 case 8 ->{
-
+                    Calificacion.obtenerNotasExtremas(registroNotas,listaAlumnos);
                 }
                 case 9 -> { // Salimos del sistema
                     condicion = false;
