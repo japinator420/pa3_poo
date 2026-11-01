@@ -35,10 +35,11 @@ public class Main {
                 ---------------------------------------
                 1) REGISTRAR ALUMNO
                 2) VER LISTA DE ALUMNOS
-                3) REGISTRAR/MODIFICAR NOTAS
-                4) VER LISTA DE NOTAS
-                5) ELIMINAR UN ALUMNO
-                6) SALIR
+                3) REGISTRAR NOTAS
+                4) MODIFICAR NOTAS
+                5) VER LISTA DE NOTAS
+                6) ELIMINAR UN ALUMNO
+                7) SALIR
                 """);
             int opcion = sc.nextInt();
             sc.nextLine();
@@ -107,13 +108,48 @@ public class Main {
 
                     break;
                 }
-                case 4 -> {
+                case 4 -> { // Modificamos una nota existente
+                    System.out.println("Ingrese el codigo del alumno:");
+                    String codigoAlumno = sc.nextLine();
+
+                    // Buscamos las calificaciones del alumno
+                    Calificacion notasEncontradas = Calificacion.buscarCalificacion(
+                        registroNotas, codigoAlumno
+                    );
+
+                    if (notasEncontradas == null) {
+                        System.out.println("El alumno no tiene notas registradas.");
+                        break;
+                    }
+
+                    // Mostramos las notas actuales
+                    System.out.println(notasEncontradas.mostrarNotas());
+
+                    System.out.println("Ingrese el número de la nota a modificar:");
+                    int numeroNota = sc.nextInt();
+
+                    System.out.println("Ingrese la nueva nota:");
+                    double nuevaNota = sc.nextDouble();
+                    sc.nextLine();
+
+                    // Modificamos la nota seleccionada
+                    boolean modificada = notasEncontradas.modificarNota(numeroNota - 1, nuevaNota);
+
+                    if (modificada) {
+                        System.out.println("Nota modificada correctamente");
+                    } else {
+                        System.out.println("No se encontró la nota seleccionada");
+                    }
+
+                    break;
+                }
+                case 5 -> {
                     for (Calificacion c : registroNotas){
                         System.out.println(c.mostrarNotas());
                     }
                     break;
                 }
-                case 5 -> { // Eliminamos un alumno de la lista
+                case 6 -> { // Eliminamos un alumno de la lista
                     System.out.println("Ingrese el codigo del alumno a eliminar:");
                     String codigoAlumno = sc.nextLine();
 
@@ -140,7 +176,7 @@ public class Main {
 
                     break;
                 }
-                case 6 -> { // Salimos del sistema
+                case 7 -> { // Salimos del sistema
                     condicion = false;
                     break;
                 }

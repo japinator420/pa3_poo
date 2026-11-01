@@ -65,4 +65,13 @@ public class Calificacion {
         }
         return null;
     }
+
+    // Modificar una nota
+    public boolean modificarNota(int indice, double nuevaNota) {
+        if (indice >= 0 && indice < notasEstudiante.size()) {
+            notasEstudiante.set(indice, nuevaNota);
+            return true;
+        }
+        return false;
+    }
 }
