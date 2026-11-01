@@ -37,7 +37,8 @@ public class Main {
                 2) VER LISTA DE ALUMNOS
                 3) REGISTRAR/MODIFICAR NOTAS
                 4) VER LISTA DE NOTAS
-                5) SALIR
+                5) ELIMINAR UN ALUMNO
+                6) SALIR
                 """);
             int opcion = sc.nextInt();
             sc.nextLine();
@@ -112,7 +113,34 @@ public class Main {
                     }
                     break;
                 }
-                case 5 -> { // Salimos del sistema
+                case 5 -> { // Eliminamos un alumno de la lista
+                    System.out.println("Ingrese el codigo del alumno a eliminar:");
+                    String codigoAlumno = sc.nextLine();
+
+                    // buscamos al alumno
+                    Alumno alumnoEncontrado = Alumno.buscarAlumno(listaAlumnos, codigoAlumno);
+
+                    if (alumnoEncontrado != null) {
+                        // buscamos las calificaciones
+                        Calificacion notasEncontradas = Calificacion.buscarCalificacion(
+                            registroNotas, codigoAlumno
+                        );
+
+                        // procedemos a eliminar al alumno y calificaciones
+                        listaAlumnos.remove(alumnoEncontrado);
+
+                        if (notasEncontradas != null) {
+                            registroNotas.remove(notasEncontradas);
+                        }
+
+                        System.out.println("Alumno y calificaciones eliminados correctamente.");
+                    } else {
+                        System.out.println("No se encontró al alumno.");
+                    }
+
+                    break;
+                }
+                case 6 -> { // Salimos del sistema
                     condicion = false;
                     break;
                 }

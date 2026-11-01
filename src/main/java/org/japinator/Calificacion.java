@@ -56,4 +56,13 @@ public class Calificacion {
         Collections.sort(notasEstudiante);
     }
 
+    // Buscar una calificación por el código de un alumno
+    public static Calificacion buscarCalificacion(ArrayList<Calificacion> registroNotas, String codigo) {
+        for (Calificacion calificacion : registroNotas) {
+            if (calificacion.getCodigoAlumno().equals(codigo)) {
+                return calificacion;
+            }
+        }
+        return null;
+    }
 }

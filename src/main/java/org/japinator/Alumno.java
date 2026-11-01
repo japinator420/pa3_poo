@@ -29,4 +29,14 @@ public class Alumno implements Comparable<Alumno> {
     public String toString() {
         return "Código: " + codigo + " - Nombre: " + nombre;
     }
+
+    // Buscar un alumno por su código
+    public static Alumno buscarAlumno(SortedSet<Alumno> listaAlumnos, String codigo) {
+        for (Alumno alumno : listaAlumnos) {
+            if (alumno.getCodigo().equals(codigo)) {
+                return alumno;
+            }
+        }
+        return null;
+    }
 }
