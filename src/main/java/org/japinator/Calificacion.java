@@ -6,6 +6,7 @@ import java.util.SortedSet;
 
 public class Calificacion {
     private double promedio;
+
     private ArrayList<Double> notasEstudiante = new ArrayList<>();
     private String codigoAlumno;
 
@@ -22,6 +23,8 @@ public class Calificacion {
         return codigoAlumno;
     }
 
+    //Permite acceder al ArrayList desde otras clases
+    // para aplicar validaciones, calcular promedios y verificar restricciones
     public ArrayList<Double> getNotasEstudiante() {
         return notasEstudiante;
     }
