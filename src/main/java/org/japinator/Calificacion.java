@@ -1,6 +1,8 @@
 package org.japinator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
+import java.util.SortedSet;
 
 public class Calificacion {
     private double promedio;
@@ -19,11 +21,16 @@ public class Calificacion {
     public String getCodigoAlumno() {
         return codigoAlumno;
     }
+    public ArrayList<Double> getNotasEstudiante(){
+        return notasEstudiante;
+    }
+
+
 
     public String mostrarNotas() {
-        String formatoNotas  = "";
+        String formatoNotas = "";
         int indice = 1;
-        for(double nota : notasEstudiante){
+        for (double nota : notasEstudiante) {
             formatoNotas += String.format("Nota %d -> %.2f\n", indice, nota);
             indice++;
         }
@@ -31,28 +38,29 @@ public class Calificacion {
         return formatoNotas;
     }
 
-    public double calcularPromedio(){
-        if (notasEstudiante.isEmpty()){
+    public double calcularPromedio() {
+        if (notasEstudiante.isEmpty()) {
             return 0;
         }
         double suma = 0;
 
-        for (double nota:notasEstudiante){
-            suma+=nota;
+        for (double nota : notasEstudiante) {
+            suma += nota;
         }
         promedio = suma / notasEstudiante.size();
         return promedio;
     }
+
     //recuperar nota segun su posicion
-    public double obtenerNota(int indice){
-        if (indice>= 0 && indice<notasEstudiante.size()){
+    public double obtenerNota(int indice) {
+        if (indice >= 0 && indice < notasEstudiante.size()) {
             return notasEstudiante.get(indice);
         }
         return -1;
     }
 
     //ordenar las notas de menor a mayor
-    public void ordenarNotas(){
+    public void ordenarNotas() {
         Collections.sort(notasEstudiante);
     }
 
@@ -74,4 +82,58 @@ public class Calificacion {
         }
         return false;
     }
+
+    public static void listarAprobados(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos) {
+        System.out.println("\n  lista de aprobados (Exclusivo para alumnos con exactamente 3 notas).");
+
+
+        if (registroNotas == null || registroNotas.isEmpty()) {
+            System.out.println("Aún no hay registros de notas guardados en el sistema");
+            return;
+        }
+
+        ArrayList<Calificacion> listaAprobados = new ArrayList<>();
+
+        for (Calificacion c : registroNotas) {
+
+            if (c.getNotasEstudiante().size() == 3) {
+                double promedio = c.calcularPromedio();
+
+
+                if (promedio >= 0 && promedio <= 20) {
+                    if (promedio >= 10.5) {
+                        listaAprobados.add(c);
+                    }
+                } else {
+                    System.out.printf(" El alumno con código %s registra un promedio fuera de rango (%.2f).\n", c.getCodigoAlumno(), promedio);
+                }
+            }
+        }
+
+        if (listaAprobados.isEmpty()) {
+            System.out.println("Ningún alumno con exactamente 3 notas alcanzó la nota aprobatoria en esta tanda.");
+            return;
+        }
+
+
+        Collections.sort(listaAprobados, (c1, c2) -> Double.compare(c2.calcularPromedio(), c1.calcularPromedio()));
+
+        System.out.println("--- LISTA OFICIAL DE APROBADOS (3 NOTAS - Ordenados por mérito) ---");
+        int puesto = 1;
+        for (Calificacion c : listaAprobados) {
+            Alumno a = Alumno.buscarAlumno(listaAlumnos, c.getCodigoAlumno());
+            String nombre = (a != null) ? a.getNombre() : "Alumno Desconocido";
+
+            System.out.printf(" %d. %s (Cód: %s) -> Promedio: %.2f (¡Aprobado!)\n", puesto, nombre, c.getCodigoAlumno(), c.calcularPromedio());
+            puesto++;
+        }
+
+
+        System.out.println("Total de alumnos aprobados con 3 notas: " + listaAprobados.size());
+    }
 }
+
+
+
+
+
