@@ -21,10 +21,10 @@ public class Calificacion {
     public String getCodigoAlumno() {
         return codigoAlumno;
     }
-    public ArrayList<Double> getNotasEstudiante(){
+
+    public ArrayList<Double> getNotasEstudiante() {
         return notasEstudiante;
     }
-
 
 
     public String mostrarNotas() {
@@ -131,9 +131,73 @@ public class Calificacion {
 
         System.out.println("Total de alumnos aprobados con 3 notas: " + listaAprobados.size());
     }
+
+
+    public static void obtenerNotasExtremas(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos) {
+
+
+        if (registroNotas == null || registroNotas.isEmpty()) {
+            System.out.println("Aún no hay registros de notas en el sistema para calcular los extremos.");
+            return;
+        }
+
+
+        ArrayList<Double> notasValidas = new ArrayList<>();
+        int alumnosEvaluados = 0;
+
+        for (Calificacion c : registroNotas) {
+            if (c.getNotasEstudiante().size() == 3) {
+                alumnosEvaluados++;
+                for (double nota : c.getNotasEstudiante()) {
+                    if (nota >= 0 && nota <= 20) {
+                        notasValidas.add(nota);
+                    }
+                }
+            }
+        }
+
+
+        if (alumnosEvaluados == 0 || notasValidas.isEmpty()) {
+            System.out.println("No hay alumnos con exactamente 3 notas válidas en el rango 0-20.");
+            return;
+        }
+
+
+        double notaAlta = Collections.max(notasValidas);
+        double notaBaja = Collections.min(notasValidas);
+
+
+        System.out.println("         REPORTE DE EXTREMOS Y EMPATES         ");
+
+        System.out.printf(" Alumnos evaluados bajo este criterio: %d\n", alumnosEvaluados);
+
+
+        System.out.printf("\n Nota más alta registrada: %.2f\n", notaAlta);
+
+        System.out.println("Alumnos que obtuvieron esta nota: ");
+        mostrarAlumnosConNota(registroNotas, listaAlumnos, notaAlta);
+        System.out.println();
+
+
+        System.out.printf("Nota más baja registrada: %.2f\n", notaBaja);
+
+        System.out.println("Alumnos que obtuvieron esta nota:");
+        mostrarAlumnosConNota(registroNotas, listaAlumnos, notaBaja);
+
+        System.out.println();
+        System.out.println("Análisis de extremos completado");
+    }
+
+
+    private static void mostrarAlumnosConNota(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos, double notaBuscada) {
+        for (Calificacion c : registroNotas) {
+            if (c.getNotasEstudiante().size() == 3 && c.getNotasEstudiante().contains(notaBuscada)) {
+                Alumno a = Alumno.buscarAlumno(listaAlumnos, c.getCodigoAlumno());
+                String nombre = (a != null) ? a.getNombre() : "Alumno Desconocido";
+                System.out.printf("%s (Cód: %s)\n", nombre, c.getCodigoAlumno());
+            }
+        }
+    }
+
 }
-
-
-
-
 
