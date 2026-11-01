@@ -56,4 +56,22 @@ public class Calificacion {
         Collections.sort(notasEstudiante);
     }
 
+    // Buscar una calificación por el código de un alumno
+    public static Calificacion buscarCalificacion(ArrayList<Calificacion> registroNotas, String codigo) {
+        for (Calificacion calificacion : registroNotas) {
+            if (calificacion.getCodigoAlumno().equals(codigo)) {
+                return calificacion;
+            }
+        }
+        return null;
+    }
+
+    // Modificar una nota
+    public boolean modificarNota(int indice, double nuevaNota) {
+        if (indice >= 0 && indice < notasEstudiante.size()) {
+            notasEstudiante.set(indice, nuevaNota);
+            return true;
+        }
+        return false;
+    }
 }
