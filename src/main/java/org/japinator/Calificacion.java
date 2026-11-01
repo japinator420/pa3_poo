@@ -137,20 +137,22 @@ public class Calificacion {
 
     public static void obtenerNotasExtremas(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos) {
 
-
+        // Validación de seguridad: Verifica si el registro principal está vacío o es nulo
         if (registroNotas == null || registroNotas.isEmpty()) {
             System.out.println("Aún no hay registros de notas en el sistema para calcular los extremos.");
             return;
         }
 
-
+        // Estructuras auxiliares para almacenar las notas válidas y contar alumnos evaluados
         ArrayList<Double> notasValidas = new ArrayList<>();
         int alumnosEvaluados = 0;
-
+        //Recorrido del registro aplicando restricciones de negocio
         for (Calificacion c : registroNotas) {
+            // Restricción: Solo evaluamos a los alumnos que tienen exactamente 3 notas registradas
             if (c.getNotasEstudiante().size() == 3) {
                 alumnosEvaluados++;
                 for (double nota : c.getNotasEstudiante()) {
+                    // Validamos cada nota individualmente dentro del sistema (0 a 20)
                     if (nota >= 0 && nota <= 20) {
                         notasValidas.add(nota);
                     }
@@ -158,29 +160,29 @@ public class Calificacion {
             }
         }
 
-
+        // Validación de datos suficientes tras aplicar los filtros
         if (alumnosEvaluados == 0 || notasValidas.isEmpty()) {
             System.out.println("No hay alumnos con exactamente 3 notas válidas en el rango 0-20.");
             return;
         }
 
-
+        // Aplicación de la clase Collections para obtener los valores máximo y mínimo global
         double notaAlta = Collections.max(notasValidas);
         double notaBaja = Collections.min(notasValidas);
 
-
+        // Presentación del reporte en consola
         System.out.println("         REPORTE DE EXTREMOS Y EMPATES         ");
 
         System.out.printf(" Alumnos evaluados bajo este criterio: %d\n", alumnosEvaluados);
 
-
+        // Reporte de la Nota Más Alta (Soporta empates)
         System.out.printf("\n Nota más alta registrada: %.2f\n", notaAlta);
 
         System.out.println("Alumnos que obtuvieron esta nota: ");
         mostrarAlumnosConNota(registroNotas, listaAlumnos, notaAlta);
         System.out.println();
 
-
+        // Reporte de la Nota Más Baja (Soporta empates)
         System.out.printf("Nota más baja registrada: %.2f\n", notaBaja);
 
         System.out.println("Alumnos que obtuvieron esta nota:");
@@ -190,12 +192,15 @@ public class Calificacion {
         System.out.println("Análisis de extremos completado");
     }
 
-
+    // Metodo aux para buscar y mostrar a los alumnos que coincidan con una nota en especifico
     private static void mostrarAlumnosConNota(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos, double notaBuscada) {
         for (Calificacion c : registroNotas) {
+            // Verifica que cumpla la regla de 3 notas y que contenga la nota buscada (maneja empates)
             if (c.getNotasEstudiante().size() == 3 && c.getNotasEstudiante().contains(notaBuscada)) {
+                // Cruza datos: busca el nombre real utilizando el SortedSet y el código del alumno
                 Alumno a = Alumno.buscarAlumno(listaAlumnos, c.getCodigoAlumno());
                 String nombre = (a != null) ? a.getNombre() : "Alumno Desconocido";
+                // Muestra en consola el nombre y el código del estudiante
                 System.out.printf("%s (Cód: %s)\n", nombre, c.getCodigoAlumno());
             }
         }
