@@ -149,7 +149,7 @@ public class Calificacion {
         // Estructuras auxiliares para almacenar las notas válidas y contar alumnos evaluados
         ArrayList<Double> notasValidas = new ArrayList<>();
         int alumnosEvaluados = 0;
-        //Recorrido del registro aplicando restricciones de negocio
+        //Recorrido del registro aplicando restricciones de solo 3 notas
         for (Calificacion c : registroNotas) {
             // Restricción: Solo evaluamos a los alumnos que tienen exactamente 3 notas registradas
             if (c.getNotasEstudiante().size() == 3) {
@@ -174,7 +174,7 @@ public class Calificacion {
         double notaBaja = Collections.min(notasValidas);
 
         // Presentación del reporte en consola
-        System.out.println("         REPORTE DE EXTREMOS Y EMPATES         ");
+        System.out.println("  REPORTE DE EXTREMOS Y EMPATES  ");
 
         System.out.printf(" Alumnos evaluados bajo este criterio: %d\n", alumnosEvaluados);
 
