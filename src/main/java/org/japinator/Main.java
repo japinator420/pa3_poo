@@ -14,6 +14,8 @@ public class Main {
 
         listaAlumnos.add(new Alumno("A002", "Miriam Flores"));
         listaAlumnos.add(new Alumno("A001", "Juan Perez"));
+        listaAlumnos.add(new Alumno("A003", "Luci Alcala"));
+        listaAlumnos.add(new Alumno("A004", "Roberto Torres"));
 
         Calificacion notasAlumno1 = new Calificacion("A001");
         notasAlumno1.añadirNota(12.3);
@@ -25,8 +27,20 @@ public class Main {
         notasAlumno2.añadirNota(11.2);
         notasAlumno2.añadirNota(20.0);
 
+        Calificacion notasAlumno3 = new Calificacion("A003");
+        notasAlumno3.añadirNota(5.3);
+        notasAlumno3.añadirNota(10.0);
+        notasAlumno3.añadirNota(2.0);
+
+        Calificacion notasAlumno4 = new Calificacion("A004");
+        notasAlumno4.añadirNota(11.2);
+        notasAlumno4.añadirNota(13.1);
+        notasAlumno4.añadirNota(20.0);
+
         registroNotas.add(notasAlumno1);
         registroNotas.add(notasAlumno2);
+        registroNotas.add(notasAlumno3);
+        registroNotas.add(notasAlumno4);
 
         // Creamos el bucle principal de funcionamiento
         do{
@@ -38,8 +52,10 @@ public class Main {
                 3) REGISTRAR NOTAS
                 4) MODIFICAR NOTAS
                 5) VER LISTA DE NOTAS
-                6) ELIMINAR UN ALUMNO
-                7) SALIR
+                6) ELIMINAR UN ALUMNO                
+                7) ALUMNOS APROBADOS
+                8) NOTA MÁS ALTA Y MÁS BAJA
+                9)SALIR
                 """);
             int opcion = sc.nextInt();
             sc.nextLine();
@@ -176,7 +192,13 @@ public class Main {
 
                     break;
                 }
-                case 7 -> { // Salimos del sistema
+                case 7 ->{
+                    Calificacion.listarAprobados(registroNotas,listaAlumnos);
+                }
+                case 8 ->{
+                    Calificacion.obtenerNotasExtremas(registroNotas,listaAlumnos);
+                }
+                case 9 -> { // Salimos del sistema
                     condicion = false;
                     break;
                 }
