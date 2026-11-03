@@ -1,12 +1,13 @@
+
 package org.japinator;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 import java.util.SortedSet;
 
 public class Calificacion {
-    private double promedio;
 
+    private double promedio;
     private ArrayList<Double> notasEstudiante = new ArrayList<>();
     private String codigoAlumno;
 
@@ -14,47 +15,49 @@ public class Calificacion {
         this.codigoAlumno = codigoAlumno;
     }
 
+    // Registrar una nueva nota
     public void añadirNota(double nota) {
         notasEstudiante.add(nota);
     }
 
-    // Getters y setters
+    // Obtener codigo del alumno
     public String getCodigoAlumno() {
         return codigoAlumno;
     }
 
-    //Permite acceder al ArrayList desde otras clases
-    // para aplicar validaciones, calcular promedios y verificar restricciones
+    // Obtener lista de notas
     public ArrayList<Double> getNotasEstudiante() {
         return notasEstudiante;
     }
 
-
+    // Mostrar notas del estudiante
     public String mostrarNotas() {
         String formatoNotas = "";
         int indice = 1;
+
         for (double nota : notasEstudiante) {
-            formatoNotas += String.format("Nota %d -> %.2f\n", indice, nota);
+            formatoNotas += String.format("Nota %d -> %.2f%n", indice, nota);
             indice++;
         }
-
         return formatoNotas;
     }
 
+    // Calcular promedio del alumno
     public double calcularPromedio() {
         if (notasEstudiante.isEmpty()) {
             return 0;
         }
-        double suma = 0;
 
+        double suma = 0;
         for (double nota : notasEstudiante) {
             suma += nota;
         }
+
         promedio = suma / notasEstudiante.size();
         return promedio;
     }
 
-    //recuperar nota segun su posicion
+    // Recuperar una nota por su posicion
     public double obtenerNota(int indice) {
         if (indice >= 0 && indice < notasEstudiante.size()) {
             return notasEstudiante.get(indice);
@@ -62,22 +65,24 @@ public class Calificacion {
         return -1;
     }
 
-    //ordenar las notas de menor a mayor
+    // Ordenar notas de menor a mayor
     public void ordenarNotas() {
         Collections.sort(notasEstudiante);
     }
 
-    // Buscar una calificación por el código de un alumno
-    public static Calificacion buscarCalificacion(ArrayList<Calificacion> registroNotas, String codigo) {
-        for (Calificacion calificacion : registroNotas) {
-            if (calificacion.getCodigoAlumno().equals(codigo)) {
-                return calificacion;
+    // Buscar calificacion por codigo
+    public static Calificacion buscarCalificacion(
+            ArrayList<Calificacion> registroNotas, String codigo) {
+
+        for (Calificacion c : registroNotas) {
+            if (c.getCodigoAlumno().equals(codigo)) {
+                return c;
             }
         }
         return null;
     }
 
-    // Modificar una nota
+    // Modificar una nota existente
     public boolean modificarNota(int indice, double nuevaNota) {
         if (indice >= 0 && indice < notasEstudiante.size()) {
             notasEstudiante.set(indice, nuevaNota);
@@ -86,128 +91,222 @@ public class Calificacion {
         return false;
     }
 
-    public static void listarAprobados(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos) {
-        System.out.println("\n  lista de aprobados (Exclusivo para alumnos con exactamente 3 notas).");
+    // Mostrar alumnos aprobados
+    public static void listarAprobados(
+            ArrayList<Calificacion> registroNotas,
+            SortedSet<Alumno> listaAlumnos) {
 
-        // Validación: Verificar si la colección está vacía o es nula
-        if (registroNotas == null || registroNotas.isEmpty()) {
-            System.out.println("Aún no hay registros de notas guardados en el sistema");
+        System.out.println("\nLISTA DE APROBADOS (Alumnos con exactamente 3 notas)");
+
+        if (registroNotas == null || registroNotas.isEmpty()
+                || listaAlumnos == null || listaAlumnos.isEmpty()) {
+            System.out.println("Aun no hay registros suficientes.");
             return;
         }
 
         ArrayList<Calificacion> listaAprobados = new ArrayList<>();
 
         for (Calificacion c : registroNotas) {
-            //Restriccion: Solo evaluamos a los alumnos que tengan exactamente 3 notas registradas
-            if (c.getNotasEstudiante().size() == 3) {
-                double promedio = c.calcularPromedio();
+            Alumno alumno = Alumno.buscarAlumno(
+                    listaAlumnos, c.getCodigoAlumno());
 
-                // Validación de rango lógico (sistema de 0 a 20)
-                if (promedio >= 0 && promedio <= 20) {
-                    // Filtro de aprobación: Nota mínima de 10.5
-                    if (promedio >= 10.5) {
-                        listaAprobados.add(c);
-                    }
-                } else {
-                    System.out.printf(" El alumno con código %s registra un promedio fuera de rango (%.2f).\n", c.getCodigoAlumno(), promedio);
-                }
+            if (alumno == null || !tieneTresNotasValidas(c)) {
+                continue;
+            }
+
+            double promedio = c.calcularPromedio();
+
+            if (promedio >= 10.5) {
+                listaAprobados.add(c);
             }
         }
-        // Validación: Si nadie pasó el filtro, se notifica y se detiene la ejecución
+
         if (listaAprobados.isEmpty()) {
-            System.out.println("Ningún alumno con exactamente 3 notas alcanzó la nota aprobatoria en esta tanda.");
+            System.out.println("Ningun alumno con 3 notas alcanzo la nota aprobatoria.");
             return;
         }
 
-        // Ordenamos de mayor a menor promedio
-        Collections.sort(listaAprobados, (c1, c2) -> Double.compare(c2.calcularPromedio(), c1.calcularPromedio()));
-        //Presentación de resultados en consola
-        System.out.println("--- LISTA OFICIAL DE APROBADOS (3 NOTAS - Ordenados por mérito) ---");
+        // Ordenar aprobados de mayor a menor promedio
+        listaAprobados.sort((c1, c2) ->
+                Double.compare(c2.calcularPromedio(), c1.calcularPromedio()));
+
+        System.out.println("--- LISTA OFICIAL DE APROBADOS ---");
+
         int puesto = 1;
         for (Calificacion c : listaAprobados) {
-            // Buscamos el nombre real del alumno utilizando el SortedSet y su código
-            Alumno a = Alumno.buscarAlumno(listaAlumnos, c.getCodigoAlumno());
-            String nombre = (a != null) ? a.getNombre() : "Alumno Desconocido";
-            // Imprimimos el puesto, nombre, código y su promedio formateado a dos decimales
-            System.out.printf(" %d. %s (Cód: %s) -> Promedio: %.2f (¡Aprobado!)\n", puesto, nombre, c.getCodigoAlumno(), c.calcularPromedio());
+            Alumno a = Alumno.buscarAlumno(
+                    listaAlumnos, c.getCodigoAlumno());
+
+            System.out.printf(
+                    "%d. %s (Cod: %s) -> Promedio: %.2f (Aprobado)%n",
+                    puesto, a.getNombre(),
+                    c.getCodigoAlumno(), c.calcularPromedio());
+
             puesto++;
         }
 
-        //Resumen final del reporte
-        System.out.println("Total de alumnos aprobados con 3 notas: " + listaAprobados.size());
+        System.out.println("Total de alumnos aprobados: "
+                + listaAprobados.size());
     }
 
+    // Mostrar nota mas alta y mas baja
+    public static void obtenerNotasExtremas(
+            ArrayList<Calificacion> registroNotas,
+            SortedSet<Alumno> listaAlumnos) {
 
-    public static void obtenerNotasExtremas(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos) {
-
-        // Validación de seguridad: Verifica si el registro principal está vacío o es nulo
-        if (registroNotas == null || registroNotas.isEmpty()) {
-            System.out.println("Aún no hay registros de notas en el sistema para calcular los extremos.");
+        if (registroNotas == null || registroNotas.isEmpty()
+                || listaAlumnos == null || listaAlumnos.isEmpty()) {
+            System.out.println("No hay registros suficientes.");
             return;
         }
 
-        // Estructuras auxiliares para almacenar las notas válidas y contar alumnos evaluados
         ArrayList<Double> notasValidas = new ArrayList<>();
         int alumnosEvaluados = 0;
-        //Recorrido del registro aplicando restricciones de solo 3 notas
+
         for (Calificacion c : registroNotas) {
-            // Restricción: Solo evaluamos a los alumnos que tienen exactamente 3 notas registradas
-            if (c.getNotasEstudiante().size() == 3) {
-                alumnosEvaluados++;
-                for (double nota : c.getNotasEstudiante()) {
-                    // Validamos cada nota individualmente dentro del sistema (0 a 20)
-                    if (nota >= 0 && nota <= 20) {
-                        notasValidas.add(nota);
-                    }
-                }
+            Alumno alumno = Alumno.buscarAlumno(
+                    listaAlumnos, c.getCodigoAlumno());
+
+            if (alumno == null || !tieneTresNotasValidas(c)) {
+                continue;
             }
+
+            alumnosEvaluados++;
+            notasValidas.addAll(c.getNotasEstudiante());
         }
 
-        // Validación de datos suficientes tras aplicar los filtros
-        if (alumnosEvaluados == 0 || notasValidas.isEmpty()) {
-            System.out.println("No hay alumnos con exactamente 3 notas válidas en el rango 0-20.");
+        if (notasValidas.isEmpty()) {
+            System.out.println("No hay alumnos con 3 notas validas.");
             return;
         }
 
-        // Aplicación de la clase Collections para obtener los valores máximo y mínimo global
         double notaAlta = Collections.max(notasValidas);
         double notaBaja = Collections.min(notasValidas);
 
-        // Presentación del reporte en consola
-        System.out.println("  REPORTE DE EXTREMOS Y EMPATES  ");
+        System.out.println("\nREPORTE DE EXTREMOS Y EMPATES");
+        System.out.println("Alumnos evaluados: " + alumnosEvaluados);
 
-        System.out.printf(" Alumnos evaluados bajo este criterio: %d\n", alumnosEvaluados);
-
-        // Reporte de la Nota Más Alta (Soporta empates)
-        System.out.printf("\n Nota más alta registrada: %.2f\n", notaAlta);
-
-        System.out.println("Alumnos que obtuvieron esta nota: ");
+        System.out.printf("Nota mas alta registrada: %.2f%n", notaAlta);
+        System.out.println("Alumnos que obtuvieron esta nota:");
         mostrarAlumnosConNota(registroNotas, listaAlumnos, notaAlta);
-        System.out.println();
 
-        // Reporte de la Nota Más Baja (Soporta empates)
-        System.out.printf("Nota más baja registrada: %.2f\n", notaBaja);
-
+        System.out.printf("%nNota mas baja registrada: %.2f%n", notaBaja);
         System.out.println("Alumnos que obtuvieron esta nota:");
         mostrarAlumnosConNota(registroNotas, listaAlumnos, notaBaja);
 
-        System.out.println();
-        System.out.println("Análisis de extremos completado");
+        System.out.println("Analisis de extremos completado.");
     }
 
-    // Metodo aux para buscar y mostrar a los alumnos que coincidan con una nota en especifico
-    private static void mostrarAlumnosConNota(ArrayList<Calificacion> registroNotas, SortedSet<Alumno> listaAlumnos, double notaBuscada) {
+    // Mostrar alumnos con notas extremas
+    private static void mostrarAlumnosConNota(
+            ArrayList<Calificacion> registroNotas,
+            SortedSet<Alumno> listaAlumnos,
+            double notaBuscada) {
+
         for (Calificacion c : registroNotas) {
-            // Verifica que cumpla la regla de 3 notas y que contenga la nota buscada (maneja empates)
-            if (c.getNotasEstudiante().size() == 3 && c.getNotasEstudiante().contains(notaBuscada)) {
-                // Cruza datos: busca el nombre real utilizando el SortedSet y el código del alumno
-                Alumno a = Alumno.buscarAlumno(listaAlumnos, c.getCodigoAlumno());
-                String nombre = (a != null) ? a.getNombre() : "Alumno Desconocido";
-                // Muestra en consola el nombre y el código del estudiante
-                System.out.printf("%s (Cód: %s)\n", nombre, c.getCodigoAlumno());
+            if (!tieneTresNotasValidas(c)) {
+                continue;
+            }
+
+            Alumno a = Alumno.buscarAlumno(
+                    listaAlumnos, c.getCodigoAlumno());
+
+            if (a != null && c.getNotasEstudiante().contains(notaBuscada)) {
+                System.out.printf("%s (Cod: %s)%n",
+                        a.getNombre(), c.getCodigoAlumno());
             }
         }
     }
 
-}
+    // Verificar que existan exactamente 3 notas validas
+    private static boolean tieneTresNotasValidas(Calificacion c) {
+        if (c == null || c.getNotasEstudiante().size() != 3) {
+            return false;
+        }
 
+        for (double nota : c.getNotasEstudiante()) {
+            if (!Double.isFinite(nota) || nota < 0 || nota > 20) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // APORTE INDIVIDUAL: REPORTE ESTADISTICO DE CALIFICACIONES
+    public static void mostrarReporteEstadistico(
+            ArrayList<Calificacion> registroNotas,
+            SortedSet<Alumno> listaAlumnos) {
+
+        int aprobados = 0;
+        int desaprobados = 0;
+        double sumaPromedios = 0;
+        ArrayList<Double> promedios = new ArrayList<>();
+
+        // Verificar que existan registros
+        if (registroNotas == null || registroNotas.isEmpty()
+                || listaAlumnos == null || listaAlumnos.isEmpty()) {
+            System.out.println("No hay registros suficientes para generar el reporte.");
+            return;
+        }
+
+        // Recorrer registros de calificaciones
+        for (Calificacion c : registroNotas) {
+
+            // Verificar que el alumno exista
+            Alumno alumno = Alumno.buscarAlumno(
+                    listaAlumnos, c.getCodigoAlumno());
+
+            if (alumno == null) {
+                continue;
+            }
+
+            // Evaluar solo alumnos con exactamente 3 notas validas
+            if (!tieneTresNotasValidas(c)) {
+                continue;
+            }
+
+            // Calcular promedio individual
+            double promedio = c.calcularPromedio();
+            promedios.add(promedio);
+            sumaPromedios += promedio;
+
+            // Clasificar aprobados y desaprobados
+            if (promedio >= 10.5) {
+                aprobados++;
+            } else {
+                desaprobados++;
+            }
+        }
+
+        // Mostrar resultados estadisticos
+        System.out.println("\nREPORTE ESTADISTICO");
+        System.out.println("------------------------------");
+        System.out.println("Total de alumnos: " + listaAlumnos.size());
+        System.out.println("Alumnos evaluados: " + promedios.size());
+        System.out.println("Alumnos aprobados: " + aprobados);
+        System.out.println("Alumnos desaprobados: " + desaprobados);
+
+        if (!promedios.isEmpty()) {
+
+            // Calcular resultados generales
+            double promedioGeneral = sumaPromedios / promedios.size();
+            double porcentajeAprobados = aprobados * 100.0 / promedios.size();
+            double porcentajeDesaprobados = desaprobados * 100.0 / promedios.size();
+
+            System.out.printf("Promedio general: %.2f%n", promedioGeneral);
+            System.out.printf("Promedio mas alto: %.2f%n",
+                    Collections.max(promedios));
+            System.out.printf("Promedio mas bajo: %.2f%n",
+                    Collections.min(promedios));
+            System.out.printf("Porcentaje de aprobados: %.2f%%%n",
+                    porcentajeAprobados);
+            System.out.printf("Porcentaje de desaprobados: %.2f%%%n",
+                    porcentajeDesaprobados);
+
+        } else {
+            System.out.println("No hay alumnos con 3 notas validas.");
+        }
+
+        System.out.println("------------------------------");
+    }
+}
