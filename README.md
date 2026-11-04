@@ -183,11 +183,11 @@ Estas validaciones permiten obtener resultados más confiables y evitar errores 
 
 Integrantes del proyecto:
 
-1. Ariana Tiparra Reyes (ArianaTiparra). 20 %
-2. Amir Álvarez Álvarez (japinator420). 20 %
-3. Andreu Antonio Rangel (andreurangel1991-art). 20 %
-4. Diana Cueva Cerna (diapia). 20 %
-5. Fátima Gallardo Ramírez (FatimaGR). 20 %
+1. Ariana Tiparra Reyes (ArianaTiparra). 100 %
+2. Amir Álvarez Álvarez (japinator420). 100 %
+3. Andreu Antonio Rangel (andreurangel1991-art). 100 %
+4. Diana Cueva Cerna (diapia). 100 %
+5. Fátima Gallardo Ramírez (FatimaGR). 100 %
 
 ## 11. Distribución de responsabilidades
 
