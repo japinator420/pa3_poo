@@ -183,13 +183,11 @@ Estas validaciones permiten obtener resultados más confiables y evitar errores 
 
 Integrantes del proyecto:
 
-1. Ariana Tiparra Reyes (ArianaTiparra).
-2. Amir Álvarez Álvarez (japinator420).
-3. Andreu Antonio Rangel (andreurangel1991-art).
-4. Diana Cueva Cerna (diapia).
-5. Fátima Gallardo Ramírez (FatimaGR).
-
-**Porcentajes de participación:** Pendientes de confirmar para PA3.
+1. Ariana Tiparra Reyes (ArianaTiparra). 20 %
+2. Amir Álvarez Álvarez (japinator420). 20 %
+3. Andreu Antonio Rangel (andreurangel1991-art). 20 %
+4. Diana Cueva Cerna (diapia). 20 %
+5. Fátima Gallardo Ramírez (FatimaGR). 20 %
 
 ## 11. Distribución de responsabilidades
 
@@ -204,6 +202,8 @@ Cada integrante participó en el desarrollo, revisión o integración de las fun
 **Aporte de Ariana Tiparra:** Calcular promedio, recuperar nota y ordenar notas.
 
 **Aporte de Fátima Gallardo:** Creación de métodos para buscar alumnos y sus calificaciones, Agregar la opción de eliminar un alumno registrado al menú y Implementación y corrección de métodos relacionados con calificaciones.
+
+**Aporte de Diana Cueva :** Método obtener NotasExtremas y listarAprobados, además del método de apoyo MostrarAlumnosConNota.
 
 ## 12. Pruebas realizadas
 
