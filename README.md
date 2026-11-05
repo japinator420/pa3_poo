@@ -252,7 +252,7 @@ Agregar capturas de pantalla de:
 
 ## 14. Video de exposición
 
-**Enlace de YouTube:**
+**Enlace de YouTube: https://youtu.be/7l0yfNl7A14**
 
 En el video se explicará:
 
